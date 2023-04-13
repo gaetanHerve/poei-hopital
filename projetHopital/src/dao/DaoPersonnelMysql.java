@@ -1,5 +1,6 @@
 package dao;
 
+import model.Personnel;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,12 +10,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DaoPersonnelMysql extends DaoMysql implements DaoMedecin { 
+public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel { 
 
 	@Override
-	public List<Medecin> findAll() throws ClassNotFoundException, SQLException {
-		ArrayList<Medecin> medecins = new ArrayList<Medecin>();
-		String sql = "select * from medecins;";
+	public List<Personnel> findAll() throws ClassNotFoundException, SQLException {
+		ArrayList<Personnel> personnels = new ArrayList<Personnel>();
+		String sql = "select * from personnel;";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
@@ -22,21 +23,23 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoMedecin {
 		ResultSet rs = st.executeQuery(sql);
 		
 		while (rs.next()) {
-			Medecin m = new Medecin(
+			Personnel m = new Personnel(
 				rs.getInt("id"),
-				rs.getString("nom")
+				rs.getString("nom"),
+				rs.getString("prenom"),
+				rs.getInt("role")
 			);
-			medecins.add(m);
+			personnels.add(m);
 		}
 		
 		conn.close();
-		return medecins;
+		return personnels;
 	}
 
 	@Override
-	public Medecin findById(Integer id) throws ClassNotFoundException, SQLException {
-		Medecin medecin = null;
-		String sql = "select * from medecins where id = ?;";
+	public Personnel findById(Integer id) throws ClassNotFoundException, SQLException {
+		Personnel personnel = null;
+		String sql = "select * from personnel where id = ?;";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
@@ -45,50 +48,34 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoMedecin {
 		ResultSet rs = ps.executeQuery();
 		
 		if (rs.next()) {
-			medecin = new Medecin(
-				rs.getInt("id"),
-				rs.getString("nom")
+			personnel = new Personnel(
+					rs.getInt("id"),
+					rs.getString("nom"),
+					rs.getString("prenom"),
+					rs.getInt("role")
 			);
 		}
 		
 		conn.close();
-		return medecin;
+		return personnel;
 	}
 
 	@Override
-	public void create(Medecin m) throws ClassNotFoundException, SQLException {
-		String sql = "insert into medecins values (?);";
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
+	public void create(Personnel obj) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
 		
-		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setString(1, m.getNom());
-		ps.executeUpdate();
-		conn.close();
 	}
 
 	@Override
-	public void update(Medecin m) throws ClassNotFoundException, SQLException {
-		String sql = "update medecins set nom = ? where id = ?;";
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
-
-		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setString(1, m.getNom());
-		ps.executeUpdate();
-		conn.close();
-	}
-
-	@Override
-	public void delete(Medecin m) throws ClassNotFoundException, SQLException {
-		String sql = "delete from medecins where id = ?;";
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
+	public void update(Personnel obj) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
 		
-		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setInt(1, m.getId());
-		ps.executeUpdate();
-		conn.close();		
+	}
+
+	@Override
+	public void delete(Personnel obj) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

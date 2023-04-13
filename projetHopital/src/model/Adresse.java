@@ -1,10 +1,19 @@
 package model;
 
 public class Adresse {
+	private int id;
 	private int numero;
 	private String rue;
 	private String ville;
 	private int code_postale;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public int getNumero() {
 		return numero;
@@ -44,8 +53,9 @@ public class Adresse {
 				+ "]";
 	}
 
-	public Adresse(int numero, String rue, String ville, int code_postale) {
+	public Adresse(int id, int numero, String rue, String ville, int code_postale) {
 		super();
+		this.id = id;
 		this.numero = numero;
 		this.rue = rue;
 		this.ville = ville;
