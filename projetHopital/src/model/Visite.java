@@ -6,7 +6,7 @@ public class Visite {
 	private int id;
 	private int idSecu;
 	private String nomMedecin;
-	private double cout;
+	private double cout = 23;
 	private LocalDate date;
 
 	public int getId() {
@@ -49,7 +49,15 @@ public class Visite {
 		this.date = date;
 	}
 
-	public Visite(int id, int idSecu, String nomMedecin, double cout, LocalDate date) {
+	public Visite(int id, int idSecu, String nomMedecin, LocalDate date) {
+		super();
+		this.id = id;
+		this.idSecu = idSecu;
+		this.nomMedecin = nomMedecin;
+		this.date = date;
+	}
+	
+	public Visite(int id, int idSecu, String nomMedecin, LocalDate date, double cout) {
 		super();
 		this.id = id;
 		this.idSecu = idSecu;

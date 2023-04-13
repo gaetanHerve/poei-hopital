@@ -31,9 +31,9 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 			Visite v = new Visite(
 				rs.getInt("id"),
 				rs.getInt("num_secu"),
-				rs.getString("ville"),
-				rs.getDouble("cout"),
-				date
+				rs.getString("nom_medecin"),
+				date,
+				rs.getDouble("cout")
 			);
 			visites.add(v);
 		}
@@ -58,9 +58,9 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 			Visite v = new Visite(
 				rs.getInt("id"),
 				rs.getInt("num_secu"),
-				rs.getString("ville"),
-				rs.getDouble("cout"),
-				date
+				rs.getString("nom_medecin"),
+				date,
+				rs.getDouble("cout")
 			);
 		}
 		
@@ -70,7 +70,7 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 
 	@Override
 	public void create(Visite v) throws ClassNotFoundException, SQLException {
-		String sql = "insert into visite values (?, ?, ?, ?);";
+		String sql = "insert into visite values (?, ?, ?, ?, ?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
@@ -79,7 +79,8 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 		ps.setInt(1, v.getId());
 		ps.setInt(2, v.getIdSecu());
 		ps.setString(3, v.getNomMedecin());
-		ps.setDate(4, date);
+		ps.setDouble(4, v.getCout());
+		ps.setDate(5, date);
 		ps.executeUpdate();
 		conn.close();
 	}
@@ -94,8 +95,10 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 		Date date = (Date) Date.from(v.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		ps.setInt(1, v.getIdSecu());
 		ps.setString(2, v.getNomMedecin());
-		ps.setDate(3, date);
-		ps.setInt(4, v.getId());
+		ps.setDouble(3, v.getCout());
+		ps.setDate(4, date);
+		ps.setDouble(4, v.getCout());
+		ps.setInt(5, v.getId());
 		ps.executeUpdate();
 		conn.close();
 	}

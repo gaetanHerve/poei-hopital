@@ -35,6 +35,51 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel {
 		conn.close();
 		return personnels;
 	}
+	
+	@Override
+	public Personnel auth(String userLogin, String pwd) throws ClassNotFoundException, SQLException {
+		Personnel personnel = null;
+		int personnelId = checkCredentials(userLogin, pwd);
+		
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
+		
+		if (personnelId != -1) {
+			String sql = "select * from personnel where id = ?;";
+			
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, userLogin);
+			ResultSet rs = ps.executeQuery();
+			
+			if (rs.next()) {
+				personnel = new Personnel(
+						rs.getInt("id"),
+						rs.getString("nom"),
+						rs.getString("prenom"),
+						rs.getInt("role")
+				);
+			}
+		}
+		
+		conn.close();
+		return personnel;
+	}
+	
+	public int checkCredentials(String userLogin, String pwd) throws ClassNotFoundException, SQLException {
+		int result = -1;
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
+		String sql = "select * from authentification where login = ? AND mot_de_passe = ?;";
+		
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setString(1, userLogin);
+		ps.setString(2, pwd);
+		ResultSet rs = ps.executeQuery();
+		if (rs.next()) {
+			result = rs.getInt("id_personnel");
+		}
+		return result;
+	}
 
 	@Override
 	public Personnel findById(Integer id) throws ClassNotFoundException, SQLException {
