@@ -53,6 +53,14 @@ public class Adresse {
 				+ "]";
 	}
 
+	public Adresse(int numero, String rue, String ville, int code_postale) {
+		super();
+		this.numero = numero;
+		this.rue = rue;
+		this.ville = ville;
+		this.code_postale = code_postale;
+	}
+	
 	public Adresse(int id, int numero, String rue, String ville, int code_postale) {
 		super();
 		this.id = id;

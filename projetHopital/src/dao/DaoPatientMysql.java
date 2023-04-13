@@ -54,7 +54,7 @@ public class DaoPatientMysql extends DaoMysql implements DaoPatient {
 		
 		if (rs.next()) {
 			Adresse adresse = new DaoAdresseMysql().findById(rs.getInt("id_adresse"));
-			Patient p = new Patient(
+			patient = new Patient(
 				rs.getInt("num_secu"),
 				rs.getString("nom"),
 				rs.getString("prenom"),
@@ -69,20 +69,24 @@ public class DaoPatientMysql extends DaoMysql implements DaoPatient {
 	}
 
 	@Override
-	public void create(Patient p) throws ClassNotFoundException, SQLException {
+	public int create(Patient p) throws ClassNotFoundException, SQLException {
+		int numSecu = p.getNum_secu();
+		int adresseId = new DaoAdresseMysql().create(p.getAdresse());
+
 		String sql = "insert into patient values (?, ?, ?, ?, ?, ?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setInt(1, p.getNum_secu());
+		ps.setInt(1, numSecu);
 		ps.setString(2, p.getNom());
 		ps.setString(3, p.getPrenom());
 		ps.setInt(4, p.getAge());
 		ps.setString(5, p.getTelephone());
-		ps.setInt(6, p.getAdresse().getId());
+		ps.setInt(6, adresseId);
 		ps.executeUpdate();
 		conn.close();
+		return numSecu;
 	}
 
 	@Override
