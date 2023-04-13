@@ -9,12 +9,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DaoMedecinMysql extends DaoMysql implements DaoMedecin { 
+public class DaoPatientMysql extends DaoMysql implements DaoPatient { 
 
 	@Override
-	public List<Medecin> findAll() throws ClassNotFoundException, SQLException {
-		ArrayList<Medecin> medecins = new ArrayList<Medecin>();
-		String sql = "select * from medecins;";
+	public List<Patient> findAll() throws ClassNotFoundException, SQLException {
+		ArrayList<Patient> patients = new ArrayList<Patient>();
+		String sql = "select * from patients;";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
@@ -22,21 +22,26 @@ public class DaoMedecinMysql extends DaoMysql implements DaoMedecin {
 		ResultSet rs = st.executeQuery(sql);
 		
 		while (rs.next()) {
-			Medecin m = new Medecin(
-				rs.getInt("id"),
-				rs.getString("nom")
+			Adresse adresse = new DaoAdresseMysql().getAdresse(rs.getInt("id_adresse"));
+			Patient p = new Patient(
+				rs.getInt("num_secu"),
+				rs.getString("nom"),
+				rs.getString("prenom"),
+				rs.getInt("age"),
+				rs.getString("telephone"),
+				adresse
 			);
-			medecins.add(m);
+			patients.add(p);
 		}
 		
 		conn.close();
-		return medecins;
+		return patients;
 	}
 
 	@Override
-	public Medecin findById(Integer id) throws ClassNotFoundException, SQLException {
-		Medecin medecin = null;
-		String sql = "select * from medecins where id = ?;";
+	public Patient findById(Integer id) throws ClassNotFoundException, SQLException {
+		Patient patient = null;
+		String sql = "select * from patients where id = ?;";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
@@ -45,48 +50,48 @@ public class DaoMedecinMysql extends DaoMysql implements DaoMedecin {
 		ResultSet rs = ps.executeQuery();
 		
 		if (rs.next()) {
-			medecin = new Medecin(
+			patient = new Patient(
 				rs.getInt("id"),
 				rs.getString("nom")
 			);
 		}
 		
 		conn.close();
-		return medecin;
+		return patient;
 	}
 
 	@Override
-	public void create(Medecin m) throws ClassNotFoundException, SQLException {
-		String sql = "insert into medecins values (?);";
+	public void create(Patient p) throws ClassNotFoundException, SQLException {
+		String sql = "insert into patients values (?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setString(1, m.getNom());
+		ps.setString(1, p.getNom());
 		ps.executeUpdate();
 		conn.close();
 	}
 
 	@Override
-	public void update(Medecin m) throws ClassNotFoundException, SQLException {
-		String sql = "update medecins set nom = ? where id = ?;";
+	public void update(Patient p) throws ClassNotFoundException, SQLException {
+		String sql = "update patients set nom = ? where id = ?;";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 
 		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setString(1, m.getNom());
+		ps.setString(1, p.getNom());
 		ps.executeUpdate();
 		conn.close();
 	}
 
 	@Override
-	public void delete(Medecin m) throws ClassNotFoundException, SQLException {
-		String sql = "delete from medecins where id = ?;";
+	public void delete(Patient p) throws ClassNotFoundException, SQLException {
+		String sql = "delete from patients where id = ?;";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setInt(1, m.getId());
+		ps.setInt(1, p.getId());
 		ps.executeUpdate();
 		conn.close();		
 	}
