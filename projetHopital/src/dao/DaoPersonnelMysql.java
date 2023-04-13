@@ -37,18 +37,17 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel {
 	}
 	
 	@Override
-	public Personnel auth(String userLogin, String pwd) throws ClassNotFoundException, SQLException {
+	public Personnel auth(String userLogin, String userPwd) throws ClassNotFoundException, SQLException {
 		Personnel personnel = null;
-		int personnelId = checkCredentials(userLogin, pwd);
+		int personnelId = checkCredentials(userLogin, userPwd);
 		
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
 		if (personnelId != -1) {
-			String sql = "select * from personnel where id = ?;";
-			
+			String sql = "select * from personnel where id = ?;";	
 			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.setString(1, userLogin);
+			ps.setInt(1, personnelId);
 			ResultSet rs = ps.executeQuery();
 			
 			if (rs.next()) {
@@ -65,7 +64,7 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel {
 		return personnel;
 	}
 	
-	public int checkCredentials(String userLogin, String pwd) throws ClassNotFoundException, SQLException {
+	public int checkCredentials(String userLogin, String userPwd) throws ClassNotFoundException, SQLException {
 		int result = -1;
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
@@ -73,7 +72,7 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel {
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
 		ps.setString(1, userLogin);
-		ps.setString(2, pwd);
+		ps.setString(2, userPwd);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
 			result = rs.getInt("id_personnel");
@@ -106,8 +105,9 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel {
 	}
 
 	@Override
-	public void create(Personnel obj) throws ClassNotFoundException, SQLException {
+	public int create(Personnel obj) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
+		return -1;
 		
 	}
 

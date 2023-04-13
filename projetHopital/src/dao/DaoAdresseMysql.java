@@ -64,18 +64,24 @@ public class DaoAdresseMysql extends DaoMysql implements DaoAdresse {
 	}
 
 	@Override
-	public void create(Adresse a) throws ClassNotFoundException, SQLException {
-		String sql = "insert into adresse values (?, ?, ?, ?);";
+	public int create(Adresse a) throws ClassNotFoundException, SQLException {
+		int newId = -1;
+		String sql = "INSERT INTO adresse (numero, rue, ville, code_postal) VALUES (?, ?, ?, ?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
-		PreparedStatement ps = conn.prepareStatement(sql);
+		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		ps.setInt(1, a.getNumero());
 		ps.setString(2, a.getRue());
 		ps.setString(3, a.getVille());
 		ps.setInt(4, a.getCode_postale());
 		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
+		if (rs.next()) {
+			newId = rs.getInt(1);
+		}
 		conn.close();
+		return newId;
 	}
 
 	@Override
