@@ -70,7 +70,7 @@ public class DaoPatientMysql extends DaoMysql implements DaoPatient {
 
 	@Override
 	public void create(Patient p) throws ClassNotFoundException, SQLException {
-		String sql = "insert into patient values (?);";
+		String sql = "insert into patient values (?, ?, ?, ?, ?, ?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
