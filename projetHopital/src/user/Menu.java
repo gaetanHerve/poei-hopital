@@ -169,7 +169,12 @@ public class Menu {
 		
 		Personnel p = new DaoPersonnelMysql().auth(login, mdp);
 		
-		Menu menu = new Menu(hopital, p.getIdRole(), p.getNom()+" "+p.getPrenom());
+		if(p == null){
+			System.out.println("Erreur avec le login ou le mot de passe ! Réessayez !\n");
+			authentification();
+		}else{
+			Menu menu = new Menu(hopital, p.getIdRole(), p.getNom()+" "+p.getPrenom());
+		}
 	}
 
 }
