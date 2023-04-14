@@ -70,9 +70,9 @@ public class Hopital {
 	public String afficheListePatients() {
 		String listePatients = "";
 		
-		if(patients.get(0) == null){
+		if(patients.isEmpty()){
 			listePatients = "Il n'y a aucun patient dans la file d'attente !";
-		}else {
+		}else if(patients.isEmpty() == false) {
 			listePatients = "Voici la liste des patients dans la file d'attente :";
 			
 			for(Patient p : patients){
