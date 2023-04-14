@@ -2,6 +2,7 @@ package user;
 
 import java.util.Scanner;
 
+import dao.DaoPatientMysql;
 import model.Adresse;
 import model.Hopital;
 import model.Patient;
@@ -61,7 +62,7 @@ public class Menu {
         }
 	}
 	
-	public void afficheMenuSecretaire(){
+	public void afficheMenuSecretaire() {
 		
 		Scanner scannerChoix = new Scanner(System.in);
 		
@@ -79,7 +80,7 @@ public class Menu {
             	System.out.println("Saisir le numéro de sécu du patient :");
             	int numSecu = scannerNumSecu.nextInt();
             	
-            	Patient p = new DaoPatientSql.findById(numSecu);
+            	Patient p = new DaoPatientMysql.findById(numSecu);
             	
                 if( p != null){
                 	Hopital.addPatient(p);
@@ -112,10 +113,13 @@ public class Menu {
                 	System.out.println("Saisir le code postal :");
                 	int cpAdresse = scannerInt.nextInt();
                 	
+                	
+                	
+                	//ajouter l'adresse dans la BDD
                 	Adresse adressePatient = new Adresse(numAdresse,rueAdresse,villeAdresse,cpAdresse);
                 	
                 	Patient newPatient = new Patient(numSecu,nomPatient,prenomPatient,agePatient,telPatient,adressePatient);
-                	new DaoPatientSql.create(newPatient);
+                	new DaoPatientMysql.create(newPatient);
                 	
                 	Hopital.addPatient(newPatient);
                 	System.out.println("Patient ajouté dans la base et dans la file d'attente !");
