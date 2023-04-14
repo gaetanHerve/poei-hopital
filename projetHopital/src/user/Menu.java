@@ -1,22 +1,34 @@
 package user;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 import dao.DaoPatientMysql;
 import dao.DaoPersonnelMysql;
+
+import dao.DaoVisiteMysql;
+
+
 import model.Adresse;
 import model.Hopital;
+import model.Medecin;
 import model.Patient;
+
+import model.Salle;
+import model.Visite;
+
 import model.Personnel;
 
+
 public class Menu {
-	
+
 	private int role;
 	private String nom;
 	private String affichage;
 	private Hopital hopital;
-	
+
+
 	public Menu() {
 	}
 
@@ -24,60 +36,87 @@ public class Menu {
 		this.hopital = hopital;
 		this.role = role;
 		this.nom = nom;
-		
-		System.out.println("Bonjour "+nom+", que voulez vous faire aujourd'hui : ");
-		if(role == 1 || role == 2){
+
+		System.out.println("Bonjour " + nom + ", que voulez vous faire aujourd'hui : ");
+		if (role == 1 || role == 2) {
 			afficheMenuMedecin();
-		}else if(role == 0){
+		} else if (role == 0) {
 			afficheMenuSecretaire();
 		}
-		
+
 	}
-	
-	public void afficheMenuMedecin(){
-		//lors de l'authentification d'un medecin, instancier la bonne salle 
-		
+
+	public void afficheMenuMedecin() throws ClassNotFoundException, SQLException {
+		// lors de l'authentification d'un medecin, instancier la bonne salle
+		boolean relancerMenu = true;
+
+		Medecin medecin = (Medecin) new DaoPersonnelMysql().findByNom(nom);
 		Scanner scannerChoix = new Scanner(System.in);
-		
+
 		System.out.println("1. Prochain patient");
 		System.out.println("2. Afficher la file d'attente");
 		System.out.println("3. Sauvegarder la liste des consultations");
 		System.out.println("4. Quitter");
-		
+
 		int choix = scannerChoix.nextInt();
 
-        switch (choix) {
-            case 1:
-                // Handle option 1
-                System.out.println("You selected option 1");
-                break;
-            case 2:
-                // Handle option 2
-                System.out.println("You selected option 2");
-                break;
-            case 3:
-                // Handle option 3
-                System.out.println("You selected option 3");
-                break;
-            case 4:
-                System.out.println("Aurevoir !");
-                break;
-            default:
-                // Invalid input
-                System.out.println("Choix invalide !");
-                afficheMenuMedecin();
-        }
+		switch (choix) {
+		case 1:
+			// Pattern Observer
+
+			medecin.libererSalle();
+			System.out.println("You selected option 1");
+			break;
+		case 2:
+			// List patient 2
+			hopital.afficheListePatients();
+			System.out.println("Voici la liste d'attente");
+			break;
+		case 3:
+			// Save consult list 3
+			DaoVisiteMysql daoVisit = new DaoVisiteMysql();
+			Salle salle = medecin.getSalleActuelle();
+			salle.getVisites();
+			List<Visite> visites = salle.getVisites();
+
+			for (Visite visite : visites) {
+				daoVisit.create(visite);
+			}
+
+			visites.clear();
+			salle.setVisites(visites);
+
+			System.out.println("Sauvegarde des consultations OK");
+			break;
+
+		// leave app
+		case 4:
+			relancerMenu = false;
+
+			System.out.println("Au revoir !");
+			break;
+		default:
+			// Invalid input
+			System.out.println("Choix invalide !");
+			afficheMenuMedecin();
+		}
+		if (relancerMenu) {
+			afficheMenuSecretaire();
+		} else {
+			//authentification();
+		}
 	}
 
 	public void afficheMenuSecretaire() throws ClassNotFoundException, SQLException{
 		
+
 		Scanner scannerChoix = new Scanner(System.in);
-		
+
 		System.out.println("1. Ajouter un patient dans la salle d'attente");
 		System.out.println("2. Afficher la file d'attente");
 		System.out.println("3. Afficher le prochain patient");
 		System.out.println("4. Quitter");
-		
+
 		int choix = scannerChoix.nextInt();
 		
 		boolean relancerMenu = true;
@@ -106,8 +145,6 @@ public class Menu {
                 	String prenomPatient = scannerString.nextLine();
                 	
                 	System.out.println("Saisir son age :");
-                	int agePatient = scannerInt.nextInt();
-                	
                 	System.out.println("Saisir son numéro de téléphone :");
                 	String telPatient = scannerString.nextLine();
                 	
