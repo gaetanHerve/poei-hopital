@@ -55,7 +55,7 @@ public class DaoPatientMysql extends DaoMysql implements DaoPatient {
 		if (rs.next()) {
 			Adresse adresse = new DaoAdresseMysql().findById(rs.getInt("id_adresse"));
 			patient = new Patient(
-				rs.getInt("num_secu"),
+				rs.getInt("id_secu"),
 				rs.getString("nom"),
 				rs.getString("prenom"),
 				rs.getInt("age"),
