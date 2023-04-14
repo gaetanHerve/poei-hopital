@@ -103,6 +103,29 @@ public class DaoPersonnelMysql extends DaoMysql implements DaoPersonnel {
 		conn.close();
 		return personnel;
 	}
+	
+	public Personnel findByNom(String nom) throws ClassNotFoundException, SQLException {
+		Personnel personnel = null;
+		String sql = "select * from personnel where nom LIKE ?;";
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
+		
+		PreparedStatement ps = conn.prepareStatement(sql);
+		ps.setString(1, nom);
+		ResultSet rs = ps.executeQuery();
+		
+		if (rs.next()) {
+			personnel = new Personnel(
+					rs.getInt("id"),
+					rs.getString("nom"),
+					rs.getString("prenom"),
+					rs.getInt("role")
+			);
+		}
+		
+		conn.close();
+		return personnel;
+	}
 
 	@Override
 	public int create(Personnel obj) throws ClassNotFoundException, SQLException {
