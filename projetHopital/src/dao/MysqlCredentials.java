@@ -6,7 +6,7 @@ public class MysqlCredentials {
 	static private String password = "EDC705edc!!";
 	
 	public String getDbName() {
-		return login;
+		return dbName;
 	}
 	
 	public String getLogin() {

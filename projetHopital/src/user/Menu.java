@@ -1,5 +1,6 @@
 package user;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import dao.DaoPatientMysql;
@@ -12,9 +13,11 @@ public class Menu {
 	private int role;
 	private String nom;
 	private String affichage;
+	private Hopital hopital;
 	
 	
-	public Menu(int role, String nom) {
+	public Menu(Hopital hopital, int role, String nom) throws ClassNotFoundException, SQLException {
+		this.hopital = hopital;
 		this.role = role;
 		this.nom = nom;
 		
@@ -62,7 +65,11 @@ public class Menu {
         }
 	}
 	
+<<<<<<< HEAD
 	public void afficheMenuSecretaire() {
+=======
+	public void afficheMenuSecretaire() throws ClassNotFoundException, SQLException{
+>>>>>>> develop
 		
 		Scanner scannerChoix = new Scanner(System.in);
 		
@@ -77,16 +84,16 @@ public class Menu {
             case 1:
             	// doit on mettre les scanner ici ou dans la methode Hopital
             	Scanner scannerNumSecu = new Scanner(System.in);
-            	System.out.println("Saisir le numéro de sécu du patient :");
+            	System.out.println("Saisir le numï¿½ro de sï¿½cu du patient :");
             	int numSecu = scannerNumSecu.nextInt();
             	
-            	Patient p = new DaoPatientMysql.findById(numSecu);
+            	Patient p = new DaoPatientMysql().findById(numSecu);
             	
                 if( p != null){
-                	Hopital.addPatient(p);
-                	System.out.println("Vous avez ajouté le patient dans la file d'attente !");
+                	hopital.addPatient(p);
+                	System.out.println("Vous avez ajoutï¿½ le patient dans la file d'attente !");
                 }else{
-                	System.out.println("Le patient n'existe pas, il faut le créer :");
+                	System.out.println("Le patient n'existe pas, il faut le crï¿½er :");
                 	Scanner scannerString = new Scanner(System.in);
                 	Scanner scannerInt = new Scanner(System.in);
                 	
@@ -99,17 +106,17 @@ public class Menu {
                 	System.out.println("Saisir son age :");
                 	int agePatient = scannerInt.nextInt();
                 	
-                	System.out.println("Saisir son numéro de téléphone :");
+                	System.out.println("Saisir son numï¿½ro de tï¿½lï¿½phone :");
                 	String telPatient = scannerString.nextLine();
                 	
                 	
-                	System.out.println("Saisir son numéro de rue :");
+                	System.out.println("Saisir son numï¿½ro de rue :");
                 	int numAdresse = scannerInt.nextInt();
                 	
                 	System.out.println("Saisir le nom de la rue :");
-                	String rueAdresse = scannerInt.nextLine();
+                	String rueAdresse = scannerString.nextLine();
                 	System.out.println("Saisir la ville :");
-                	String villeAdresse = scannerInt.nextLine();
+                	String villeAdresse = scannerString.nextLine();
                 	System.out.println("Saisir le code postal :");
                 	int cpAdresse = scannerInt.nextInt();
                 	
@@ -119,19 +126,20 @@ public class Menu {
                 	Adresse adressePatient = new Adresse(numAdresse,rueAdresse,villeAdresse,cpAdresse);
                 	
                 	Patient newPatient = new Patient(numSecu,nomPatient,prenomPatient,agePatient,telPatient,adressePatient);
-                	new DaoPatientMysql.create(newPatient);
+
+                	new DaoPatientMysql().create(newPatient);
                 	
-                	Hopital.addPatient(newPatient);
-                	System.out.println("Patient ajouté dans la base et dans la file d'attente !");
+                	hopital.addPatient(newPatient);
+                	System.out.println("Patient ajoutï¿½ dans la base et dans la file d'attente !");
                 }
                 
                 
                 afficheMenuSecretaire();
             case 2:
-            	Hopital.afficheListePatients();
+            	hopital.afficheListePatients();
                 afficheMenuSecretaire();
             case 3:
-            	Hopital.affichePremierPatient();
+            	hopital.affichePremierPatient();
                 afficheMenuSecretaire();
             case 4:
                 System.out.println("Aurevoir !");

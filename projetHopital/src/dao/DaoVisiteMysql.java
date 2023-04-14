@@ -55,7 +55,7 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 		
 		if (rs.next()) {
 			LocalDate date = rs.getDate("date_heure").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			Visite v = new Visite(
+			visite = new Visite(
 				rs.getInt("id"),
 				rs.getInt("num_secu"),
 				rs.getString("nom_medecin"),
@@ -69,12 +69,13 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 	}
 
 	@Override
-	public void create(Visite v) throws ClassNotFoundException, SQLException {
+	public int create(Visite v) throws ClassNotFoundException, SQLException {
+		int newId = -1;
 		String sql = "insert into visite values (?, ?, ?, ?, ?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
-		PreparedStatement ps = conn.prepareStatement(sql);
+		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		Date date = (Date) Date.from(v.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
 		ps.setInt(1, v.getId());
 		ps.setInt(2, v.getIdSecu());
@@ -82,7 +83,12 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 		ps.setDouble(4, v.getCout());
 		ps.setDate(5, date);
 		ps.executeUpdate();
+		ResultSet rs = ps.getGeneratedKeys();
+		if (rs.next()) {
+			newId = rs.getInt(1);
+		}
 		conn.close();
+		return newId;
 	}
 
 	@Override

@@ -48,7 +48,7 @@ public class DaoRoleMysql extends DaoMysql implements DaoRole {
 		ResultSet rs = ps.executeQuery();
 		
 		if (rs.next()) {
-			Role v = new Role(
+			role = new Role(
 				rs.getInt("id"),
 				rs.getString("role"),
 				rs.getInt("salle")
@@ -60,17 +60,19 @@ public class DaoRoleMysql extends DaoMysql implements DaoRole {
 	}
 
 	@Override
-	public void create(Role r) throws ClassNotFoundException, SQLException {
+	public int create(Role r) throws ClassNotFoundException, SQLException {
+		int id = r.getId();
 		String sql = "insert into role values (?, ?, ?);";
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
 		PreparedStatement ps = conn.prepareStatement(sql);
-		ps.setInt(1, r.getId());
+		ps.setInt(1, id);
 		ps.setString(2, r.getRole());
 		ps.setInt(3, r.getSalle());
 		ps.executeUpdate();
 		conn.close();
+		return id;
 	}
 
 	@Override
