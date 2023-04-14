@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.SQLException;
+
 public class Medecin extends Personnel{
 	private Salle salleActuelle;
 	
@@ -21,7 +23,7 @@ public class Medecin extends Personnel{
 		this.salleActuelle = salleActuelle;
 	}
 
-	public Patient libererSalle() {
+	public Patient libererSalle() throws ClassNotFoundException, SQLException {
 		if (salleActuelle != null) {
 			salleActuelle.setPatientActuel(null);
 		}

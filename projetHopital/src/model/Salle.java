@@ -1,6 +1,10 @@
 package model;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
+
+import dao.DaoVisiteMysql;
 
 public class Salle {
 	private int num_salle;
@@ -28,8 +32,18 @@ public class Salle {
 		return patientActuel;
 	}
 
-	public void setPatientActuel(Patient patientActuel) {
-		this.patientActuel = patientActuel;
+	public void setPatientActuel(Patient p) throws ClassNotFoundException, SQLException {
+		this.patientActuel = p;
+		if (p!=null) {
+			if (this.visites.size() == 5) {
+				for (Visite visite : visites) {
+					new DaoVisiteMysql().create(visite);
+				}
+				this.visites.clear();
+			}
+			this.visites.add(new Visite(p.getNum_secu(), this.medecin.getNom(), LocalDate.now()));
+		}
+		
 	}
 
 	public List<Visite> getVisites() {

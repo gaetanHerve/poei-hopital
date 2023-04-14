@@ -76,7 +76,9 @@ public class DaoVisiteMysql extends DaoMysql implements DaoVisite {
 		Connection conn = DriverManager.getConnection(connectionStr, login, pwd);
 		
 		PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		Date date = (Date) Date.from(v.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		// Date date = (Date) Date.from(v.getDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
+		Date date = new Date(76239745);
+		
 		ps.setInt(1, v.getId());
 		ps.setInt(2, v.getIdSecu());
 		ps.setString(3, v.getNomMedecin());
