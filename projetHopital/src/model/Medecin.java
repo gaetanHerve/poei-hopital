@@ -1,7 +1,8 @@
 package model;
 
 public class Medecin extends Personnel{
-
+	private Salle salleActuelle;
+	
 	public Medecin() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -11,6 +12,21 @@ public class Medecin extends Personnel{
 		super(id, nom, prenom, idRole);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Salle getSalleActuelle() {
+		return salleActuelle;
+	}
 
+	public void setSalleActuelle(Salle salleActuelle) {
+		this.salleActuelle = salleActuelle;
+	}
+
+	public Patient libererSalle() {
+		if (salleActuelle != null) {
+			salleActuelle.setPatientActuel(null);
+		}
+		Patient patient = Hopital.getInstance().getSecretaire().notif(salleActuelle);
+		return patient;
+	}
 
 }

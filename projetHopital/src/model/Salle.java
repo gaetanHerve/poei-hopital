@@ -6,6 +6,7 @@ public class Salle {
 	private int num_salle;
 	private Medecin medecin;
 	private List<Visite> visites;
+	private Patient patientActuel;
 
 	public int getNum_salle() {
 		return num_salle;
@@ -21,6 +22,14 @@ public class Salle {
 
 	public void setMedecin(Medecin medecin) {
 		this.medecin = medecin;
+	}
+
+	public Patient getPatientActuel() {
+		return patientActuel;
+	}
+
+	public void setPatientActuel(Patient patientActuel) {
+		this.patientActuel = patientActuel;
 	}
 
 	public List<Visite> getVisites() {

@@ -40,11 +40,21 @@ public class Hopital {
 	public void setSecretaire(Secretaire secretaire) {
 		this.secretaire = secretaire;
 	}
+	
+	
 
 //	public static void setInstance(Hopital instance) {
 //		Hopital.instance = instance;
 //
 //	}
+
+	public List<Patient> getPatients() {
+		return patients;
+	}
+
+	public void setPatients(List<Patient> patients) {
+		this.patients = patients;
+	}
 
 	@Override
 	public String toString() {
