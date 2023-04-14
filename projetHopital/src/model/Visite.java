@@ -49,6 +49,13 @@ public class Visite {
 		this.date = date;
 	}
 
+	public Visite(int idSecu, String nomMedecin, LocalDate date) {
+		super();
+		this.idSecu = idSecu;
+		this.nomMedecin = nomMedecin;
+		this.date = date;
+	}
+	
 	public Visite(int id, int idSecu, String nomMedecin, LocalDate date) {
 		super();
 		this.id = id;

@@ -1,5 +1,6 @@
 package model;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class Secretaire extends Personnel {
@@ -14,11 +15,11 @@ public class Secretaire extends Personnel {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Patient notif(Salle salle) {
+	public Patient notif(Salle salle) throws ClassNotFoundException, SQLException {
 		return placerPatient(salle);
 	}
 	
-	public Patient placerPatient(Salle salle) {
+	public Patient placerPatient(Salle salle) throws ClassNotFoundException, SQLException {
 		Patient patient = null;
 		List<Patient> fileAttente = Hopital.getInstance().getPatients();
 		if (!fileAttente.isEmpty()) {

@@ -32,25 +32,28 @@ public class Menu {
 	public Menu() {
 	}
 
-	public Menu(Hopital hopital, int role, String nom) throws ClassNotFoundException, SQLException {
+	public Menu(Hopital hopital, int role, String nom, Personnel personnel) throws ClassNotFoundException, SQLException {
 		this.hopital = hopital;
 		this.role = role;
 		this.nom = nom;
 
 		System.out.println("Bonjour " + nom + ", que voulez vous faire aujourd'hui : ");
 		if (role == 1 || role == 2) {
-			afficheMenuMedecin();
+			afficheMenuMedecin(personnel);
 		} else if (role == 0) {
 			afficheMenuSecretaire();
 		}
 
 	}
 
-	public void afficheMenuMedecin() throws ClassNotFoundException, SQLException {
+	public void afficheMenuMedecin(Personnel p) throws ClassNotFoundException, SQLException {
 		// lors de l'authentification d'un medecin, instancier la bonne salle
 		boolean relancerMenu = true;
-
-		Medecin medecin = (Medecin) new DaoPersonnelMysql().findByNom(nom);
+		int role = p.getIdRole();
+		Medecin medecin = new Medecin(p.getId(), p.getNom(), p.getPrenom(), role);
+		medecin.setSalleActuelle(Hopital.getInstance().getSalles().get(role));
+		
+		
 		Scanner scannerChoix = new Scanner(System.in);
 
 		System.out.println("1. Prochain patient");
@@ -69,8 +72,8 @@ public class Menu {
 			break;
 		case 2:
 			// List patient 2
-			hopital.afficheListePatients();
-			System.out.println("Voici la liste d'attente");
+			String patientsStr = Hopital.getInstance().afficheListePatients();
+			System.out.println(patientsStr);
 			break;
 		case 3:
 			// Save consult list 3
@@ -98,12 +101,12 @@ public class Menu {
 		default:
 			// Invalid input
 			System.out.println("Choix invalide !");
-			afficheMenuMedecin();
+			afficheMenuMedecin(medecin);
 		}
 		if (relancerMenu) {
-			afficheMenuSecretaire();
+			afficheMenuMedecin(medecin);
 		} else {
-			//authentification();
+			authentification();
 		}
 	}
 
@@ -146,7 +149,7 @@ public class Menu {
                 	
                 	System.out.println("Saisir son age :");
                 	int agePatient = scannerInt.nextInt();
-                	
+
                 	System.out.println("Saisir son numéro de téléphone :");
                 	String telPatient = scannerString.nextLine();
                 	
@@ -198,7 +201,7 @@ public class Menu {
 		
 	}
 	
-	public void authentification() throws ClassNotFoundException, SQLException{
+	public void authentification() throws ClassNotFoundException, SQLException {
 		Scanner scannerString = new Scanner(System.in);
 		System.out.print("Veuillez vous connectez \nLogin:");
 		String login = scannerString.nextLine();
@@ -212,7 +215,7 @@ public class Menu {
 			System.out.println("Erreur avec le login ou le mot de passe ! Réessayez !\n");
 			authentification();
 		}else{
-			Menu menu = new Menu(hopital, p.getIdRole(), p.getNom()+" "+p.getPrenom());
+			Menu menu = new Menu(hopital, p.getIdRole(), p.getNom()+" "+p.getPrenom(), p);
 		}
 	}
 

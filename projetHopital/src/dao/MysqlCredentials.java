@@ -3,7 +3,7 @@ package dao;
 public class MysqlCredentials {
 	static private String dbName = "projethopital";
 	static private String login = "root";
-	static private String password = "root";
+	static private String password = "EDC705edc!!";
 	
 	public String getDbName() {
 		return dbName;
