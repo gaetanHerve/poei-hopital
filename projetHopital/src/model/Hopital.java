@@ -7,7 +7,7 @@ public class Hopital {
 	private static Hopital instance;
 	private List<Salle> salles;
 	private Secretaire secretaire;
-	private static List<Patient> patients;
+	private List<Patient> patients;
 
 	private Hopital() {
 		salles = new ArrayList<Salle>();
@@ -41,21 +41,21 @@ public class Hopital {
 		this.secretaire = secretaire;
 	}
 
-	public static void setInstance(Hopital instance) {
-		Hopital.instance = instance;
-
-	}
+//	public static void setInstance(Hopital instance) {
+//		Hopital.instance = instance;
+//
+//	}
 
 	@Override
 	public String toString() {
 		return "Hopital [salles=" + salles + ", secretaire=" + secretaire + "]";
 	}
 	
-	public static void addPatient(Patient patient) {
+	public void addPatient(Patient patient) {
 		patients.add(patient);
 	}
 	
-	public static String affichePremierPatient() {
+	public String affichePremierPatient() {
 		Patient premierPatient = patients.get(0);
 		String strPatient = "";
 		
@@ -67,7 +67,7 @@ public class Hopital {
 		
 		return strPatient;
 	}
-	public static String afficheListePatients() {
+	public String afficheListePatients() {
 		String listePatients = "";
 		
 		if(patients.get(0) == null){
