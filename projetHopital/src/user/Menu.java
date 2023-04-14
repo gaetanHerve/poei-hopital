@@ -149,6 +149,7 @@ public class Menu {
                 	
                 	System.out.println("Saisir son age :");
                 	int agePatient = scannerInt.nextInt();
+
                 	System.out.println("Saisir son numéro de téléphone :");
                 	String telPatient = scannerString.nextLine();
                 	
