@@ -26,14 +26,14 @@ public class Menu {
 	private int role;
 	private String nom;
 	private String affichage;
-	private Hopital hopital;
+	// private Hopital hopital;
 
 
 	public Menu() {
 	}
 
-	public Menu(Hopital hopital, int role, String nom, Personnel personnel) throws ClassNotFoundException, SQLException {
-		this.hopital = hopital;
+	public Menu(int role, String nom, Personnel personnel) throws ClassNotFoundException, SQLException {
+		// this.hopital = hopital;
 		this.role = role;
 		this.nom = nom;
 
@@ -67,8 +67,8 @@ public class Menu {
 		case 1:
 			// Pattern Observer
 
-			medecin.libererSalle();
-			System.out.println("You selected option 1");
+			Patient pajoute = medecin.libererSalle();
+			System.out.println(pajoute.getNom() + " est entré dans la salle");
 			break;
 		case 2:
 			// List patient 2
@@ -215,7 +215,7 @@ public class Menu {
 			System.out.println("Erreur avec le login ou le mot de passe ! Réessayez !\n");
 			authentification();
 		}else{
-			Menu menu = new Menu(hopital, p.getIdRole(), p.getNom()+" "+p.getPrenom(), p);
+			Menu menu = new Menu(p.getIdRole(), p.getNom()+" "+p.getPrenom(), p);
 		}
 	}
 

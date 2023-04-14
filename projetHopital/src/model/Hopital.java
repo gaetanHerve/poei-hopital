@@ -7,7 +7,7 @@ public class Hopital {
 	private static Hopital instance;
 	private List<Salle> salles;
 	private Secretaire secretaire;
-	private List<Patient> patients;
+	private static List<Patient> patients;
 
 	private Hopital() {
 		salles = new ArrayList<Salle>();
