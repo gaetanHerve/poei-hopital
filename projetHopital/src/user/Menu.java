@@ -4,9 +4,11 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import dao.DaoPatientMysql;
+import dao.DaoPersonnelMysql;
 import model.Adresse;
 import model.Hopital;
 import model.Patient;
+import model.Personnel;
 
 public class Menu {
 	
@@ -15,7 +17,9 @@ public class Menu {
 	private String affichage;
 	private Hopital hopital;
 	
-	
+	public Menu() {
+	}
+
 	public Menu(Hopital hopital, int role, String nom) throws ClassNotFoundException, SQLException {
 		this.hopital = hopital;
 		this.role = role;
@@ -64,7 +68,7 @@ public class Menu {
                 afficheMenuMedecin();
         }
 	}
-	
+
 	public void afficheMenuSecretaire() throws ClassNotFoundException, SQLException{
 		
 		Scanner scannerChoix = new Scanner(System.in);
@@ -75,21 +79,23 @@ public class Menu {
 		System.out.println("4. Quitter");
 		
 		int choix = scannerChoix.nextInt();
+		
+		boolean relancerMenu = true;
 
         switch (choix) {
             case 1:
             	// doit on mettre les scanner ici ou dans la methode Hopital
             	Scanner scannerNumSecu = new Scanner(System.in);
-            	System.out.println("Saisir le num�ro de s�cu du patient :");
+            	System.out.println("Saisir le numéro de sécu du patient :");
             	int numSecu = scannerNumSecu.nextInt();
             	
             	Patient p = new DaoPatientMysql().findById(numSecu);
             	
                 if( p != null){
-                	hopital.addPatient(p);
-                	System.out.println("Vous avez ajout� le patient dans la file d'attente !");
+                	Hopital.getInstance().addPatient(p);
+                	System.out.println("Vous avez ajouté le patient dans la file d'attente !");
                 }else{
-                	System.out.println("Le patient n'existe pas, il faut le cr�er :");
+                	System.out.println("Le patient n'existe pas, il faut le créer :");
                 	Scanner scannerString = new Scanner(System.in);
                 	Scanner scannerInt = new Scanner(System.in);
                 	
@@ -102,11 +108,11 @@ public class Menu {
                 	System.out.println("Saisir son age :");
                 	int agePatient = scannerInt.nextInt();
                 	
-                	System.out.println("Saisir son num�ro de t�l�phone :");
+                	System.out.println("Saisir son numéro de téléphone :");
                 	String telPatient = scannerString.nextLine();
                 	
                 	
-                	System.out.println("Saisir son num�ro de rue :");
+                	System.out.println("Saisir son numéro de rue :");
                 	int numAdresse = scannerInt.nextInt();
                 	
                 	System.out.println("Saisir le nom de la rue :");
@@ -116,31 +122,54 @@ public class Menu {
                 	System.out.println("Saisir le code postal :");
                 	int cpAdresse = scannerInt.nextInt();
                 	
+                	
+                	
+                	//ajouter l'adresse dans la BDD
                 	Adresse adressePatient = new Adresse(numAdresse,rueAdresse,villeAdresse,cpAdresse);
                 	
                 	Patient newPatient = new Patient(numSecu,nomPatient,prenomPatient,agePatient,telPatient,adressePatient);
+
                 	new DaoPatientMysql().create(newPatient);
                 	
-                	hopital.addPatient(newPatient);
-                	System.out.println("Patient ajout� dans la base et dans la file d'attente !");
+                	Hopital.getInstance().addPatient(newPatient);
+                	System.out.println("Patient ajouté dans la base et dans la file d'attente !");
                 }
                 
-                
-                afficheMenuSecretaire();
+                break;
             case 2:
-            	hopital.afficheListePatients();
-                afficheMenuSecretaire();
+            	System.out.println(Hopital.getInstance().afficheListePatients());
+                break;
             case 3:
-            	hopital.affichePremierPatient();
-                afficheMenuSecretaire();
+            	System.out.println(Hopital.getInstance().affichePremierPatient());
+                break;
             case 4:
                 System.out.println("Aurevoir !");
+                relancerMenu = false;
                 break;
             default:
                 System.out.println("Choix invalide !");
-                afficheMenuSecretaire();
+                break;
+        }
+        
+        if(relancerMenu){
+        	afficheMenuSecretaire();
+        }else{
+        	authentification();
         }
 		
+	}
+	
+	public void authentification() throws ClassNotFoundException, SQLException{
+		Scanner scannerString = new Scanner(System.in);
+		System.out.print("Veuillez vous connectez \nLogin:");
+		String login = scannerString.nextLine();
+		
+		System.out.print("Mot de passe :");
+		String mdp = scannerString.nextLine();
+		
+		Personnel p = new DaoPersonnelMysql().auth(login, mdp);
+		
+		Menu menu = new Menu(hopital, p.getIdRole(), p.getNom()+" "+p.getPrenom());
 	}
 
 }
